@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DayManager : MonoBehaviour {
+
+	public Slider DaySlider;
 
 	public delegate void ChangeDay();
 	public event ChangeDay OnChangeDay;
@@ -45,18 +48,27 @@ public class DayManager : MonoBehaviour {
 	}
 
 	IEnumerator RunningDayCycle() {
+		float stepDuration = 100f;
+		float stepSlider = 1 / stepDuration;
+
+		float duration = 0;
 		while (nightDuration < longestNightDuration) {
 			Day = !Day;
-
+		
 			if (Day) {
 				Debug.LogFormat("day duration: {0}s | night duration: {1}s", dayDuration, nightDuration);
-				yield return new WaitForSeconds(dayDuration);
+				duration = dayDuration / stepDuration;
 			}
 			else {
-				yield return new WaitForSeconds(nightDuration);
-				nightDuration += 1f; // Each night lasts 1 second longer.
+				duration = nightDuration / stepDuration;
+				nightDuration += 1; // Each night lasts 1 second longer.
 			}
 
+			DaySlider.value = 0;
+			while (DaySlider.value < 1) {
+				yield return new WaitForSeconds(duration);
+				DaySlider.value += stepSlider;
+			}
 		}
 
 		Debug.Log("Game Over !");

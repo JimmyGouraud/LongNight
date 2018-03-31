@@ -114,13 +114,11 @@ public class VillagerManager : MonoBehaviour {
 			GameObject resource = resources.GetChild(i).gameObject;
 			if (closerResource == null) {
 				closerResource = resource;
-				closerDistance = Vector3.Distance(closerResource.transform.position,
-					this.transform.position);
+				closerDistance = Vector3.Distance(closerResource.transform.position, this.transform.position);
 				continue;
 			}
 
-			float newDistance = Vector3.Distance(resource.transform.position,
-					this.transform.position);
+			float newDistance = Vector3.Distance(resource.transform.position, this.transform.position);
 			if (newDistance < closerDistance) {
 				closerResource = resource;
 				closerDistance = newDistance;
