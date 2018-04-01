@@ -35,7 +35,7 @@ public class VillagerManager : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-		PanelUI.Instance.UpdatePanel(this.gameObject);
+		InformationsUI.Instance.UpdatePanel(this.gameObject);
 	}
 
 	void OnCollisionEnter(Collision collision) {

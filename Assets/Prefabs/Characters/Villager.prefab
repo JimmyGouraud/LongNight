@@ -21,8 +21,8 @@ GameObject:
   - component: {fileID: 4243300271656868}
   - component: {fileID: 33124170924040338}
   - component: {fileID: 23713033870739844}
-  - component: {fileID: 54725959402011362}
   - component: {fileID: 135349015608530806}
+  - component: {fileID: 54725959402011362}
   - component: {fileID: 114311461213135140}
   m_Layer: 0
   m_Name: Villager
