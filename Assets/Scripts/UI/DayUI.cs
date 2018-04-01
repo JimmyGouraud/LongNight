@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class DayUI : MonoBehaviour {
@@ -16,6 +14,7 @@ public class DayUI : MonoBehaviour {
 
 	void Awake () {
 		DayManager.Instance.OnChangeDay += UpdateText;
+		DayProgression.interactable = false;
 	}
 
 	void UpdateText() {

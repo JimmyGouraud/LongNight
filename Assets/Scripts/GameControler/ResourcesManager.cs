@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ResourcesManager : MonoBehaviour {
 
@@ -19,12 +17,12 @@ public class ResourcesManager : MonoBehaviour {
 		}
 	}
 
-	private int irons = 0;
-	public int Irons {
-		get { return irons; }
+	private int stones = 0;
+	public int Stones {
+		get { return stones; }
 
 		private set {
-			irons = value;
+			stones = value;
 			if (OnChangeResources != null) {
 				OnChangeResources();
 			}
@@ -53,15 +51,15 @@ public class ResourcesManager : MonoBehaviour {
 	}
 
 	void Start() {
-		Woods = 0;
-		Irons = 0;
+		this.Woods = 0;
+		this.Stones = 0;
 	}
 
-	public void AddWoods(int woodPieces) {
-		Woods += woodPieces;
+	public void AddWoods(int woods) {
+		this.Woods += woods;
 	}
 
-	public void AddIrons(int ironOres) {
-		Irons += ironOres;
+	public void AddStones(int stones) {
+		this.Stones += stones;
 	}
 }

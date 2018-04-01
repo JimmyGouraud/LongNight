@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class VillagerManager : MonoBehaviour {
@@ -20,7 +19,7 @@ public class VillagerManager : MonoBehaviour {
 	private bool lumbering = false;
 
 	void Awake() {
-		this.cityHall = GameObject.Find("CityHall");
+		this.cityHall = GameObject.Find("City Hall");
 		this.resourcesHeap = FindCloserResource();
 		DayManager.Instance.OnChangeDay += ChangeActivity;
 	}
@@ -35,47 +34,53 @@ public class VillagerManager : MonoBehaviour {
 
 	}
 
+	void OnMouseDown() {
+		PanelUI.Instance.UpdatePanel(this.gameObject);
+	}
+
 	void OnCollisionEnter(Collision collision) {
 		GameObject collisionGO = collision.gameObject;
 		if (collisionGO == this.target) {
 			this.transform.position = new Vector3(collision.transform.position.x, transform.position.y, collision.transform.position.z);
 			reachTarget = true;
 
-			if (collisionGO.tag == "Iron Mine") {
+			if (collisionGO.tag == "Stone Mine") {
 				StartCoroutine(Mining());
 			}
-			else if (collisionGO.tag == "Woods") {
+			else if (collisionGO.tag == "Forestry") {
 				StartCoroutine(Lumbering());
 			}
 		}
 	}
-
+	
 	IEnumerator Mining() { // exploitation minière
-		mining = true;
-		int ironOres = 0;
+		this.mining = true;
+
+		int stones = 0;
 		while (mining) {
-			ironOres++;
-			if (ironOres == 10) {
-				ResourcesManager.Instance.AddIrons(ironOres);
-				ironOres = 0;
+			stones++;
+			if (stones == 10) {
+				ResourcesManager.Instance.AddStones(stones);
+				stones = 0;
 			}
 			yield return new WaitForSeconds(0.2f);
 		}
-		ResourcesManager.Instance.AddIrons(ironOres);
+		ResourcesManager.Instance.AddStones(stones);
 	}
 
 	IEnumerator Lumbering() { // exploitation forestière
 		this.lumbering = true;
-		int woodPieces = 0;
+
+		int woods = 0;
 		while (lumbering) {
-			woodPieces++;
-			if (woodPieces == 10) {
-				ResourcesManager.Instance.AddWoods(woodPieces);
-				woodPieces = 0;
+			woods++;
+			if (woods == 10) {
+				ResourcesManager.Instance.AddWoods(woods);
+				woods = 0;
 			}
 			yield return new WaitForSeconds(0.2f);
 		}
-		ResourcesManager.Instance.AddWoods(woodPieces);
+		ResourcesManager.Instance.AddWoods(woods);
 	}
 
 	IEnumerator MoveTowardTarget() {

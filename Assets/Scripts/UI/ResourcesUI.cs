@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ResourcesUI : MonoBehaviour {
 
 	public Text WoodsText;
-	public Text IronsText;
+	public Text StonesText;
 
 	void Awake() {
 		ResourcesManager.Instance.OnChangeResources += UpdateResourcesUI;
@@ -12,7 +12,7 @@ public class ResourcesUI : MonoBehaviour {
 
 	void UpdateResourcesUI() {
 		WoodsText.text = "Woods: " + ResourcesManager.Instance.Woods;
-		IronsText.text = "Irons: " + ResourcesManager.Instance.Irons;
+		StonesText.text = "Stones: " + ResourcesManager.Instance.Stones;
 	}
 
 }
