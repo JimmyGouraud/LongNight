@@ -2,8 +2,10 @@
 using UnityEngine;
 
 public class VillagerManager : MonoBehaviour {
-	
+	enum State { idle, mining, lumbering, building, walking };
+
 	private GameObject target = null;
+	private State state = State.idle;
 
 	// Will be destroyed when unnecessary
 	private GameObject cityHall = null;
@@ -13,10 +15,6 @@ public class VillagerManager : MonoBehaviour {
 	private Coroutine coMovement;
 
 	private float speed = 3f;
-	private bool reachTarget = false;
-
-	private bool mining = false;
-	private bool lumbering = false;
 
 	void Awake() {
 		this.cityHall = GameObject.Find("City Hall");
@@ -37,27 +35,41 @@ public class VillagerManager : MonoBehaviour {
 	void OnMouseDown() {
 		InformationsUI.Instance.UpdatePanel(this.gameObject);
 	}
+	
+	GameObject FindAncestorWithRigidbody(GameObject go)
+	{
+		while (go.transform.parent != null && (go.GetComponent<Rigidbody>() == null)) {
+			go = go.transform.parent.gameObject;
+		}
 
-	void OnCollisionEnter(Collision collision) {
-		GameObject collisionGO = collision.gameObject;
-		if (collisionGO == this.target) {
-			this.transform.position = new Vector3(collision.transform.position.x, transform.position.y, collision.transform.position.z);
-			reachTarget = true;
+		return go.GetComponent<Rigidbody>() == null ? null : go;
+	}
 
-			if (collisionGO.tag == "Stone Mine") {
+	void OnTriggerEnter(Collider collider)
+	{
+		// TODO: Find another way to collide with forestry or stone mines.
+		GameObject colliderGO = FindAncestorWithRigidbody(collider.gameObject);
+
+		if (colliderGO == this.target) {
+			this.transform.position = new Vector3(colliderGO.transform.position.x, transform.position.y, colliderGO.transform.position.z);
+
+			if (state != State.mining && colliderGO.tag == "Stone Mine") {
 				StartCoroutine(Mining());
 			}
-			else if (collisionGO.tag == "Forestry") {
+			else if (state != State.lumbering && colliderGO.tag == "Forestry") {
 				StartCoroutine(Lumbering());
+			}
+			else if (state != State.idle && colliderGO.tag == "City Hall") {
+				state = State.idle;
 			}
 		}
 	}
 	
 	IEnumerator Mining() { // exploitation minière
-		this.mining = true;
+		state = State.mining;
 
 		int stones = 0;
-		while (mining) {
+		while (state == State.mining) {
 			stones++;
 			if (stones == 10) {
 				ResourcesManager.Instance.AddStones(stones);
@@ -69,10 +81,10 @@ public class VillagerManager : MonoBehaviour {
 	}
 
 	IEnumerator Lumbering() { // exploitation forestière
-		this.lumbering = true;
+		state = State.lumbering;
 
 		int woods = 0;
-		while (lumbering) {
+		while (state == State.lumbering) {
 			woods++;
 			if (woods == 10) {
 				ResourcesManager.Instance.AddWoods(woods);
@@ -84,12 +96,10 @@ public class VillagerManager : MonoBehaviour {
 	}
 
 	IEnumerator MoveTowardTarget() {
-		Vector3 directionToTarget = GetDirectionToTarget(this.target);
+		state = State.walking;
 
-		this.mining = false;
-		this.lumbering = false;
-		this.reachTarget = false;
-		while (!reachTarget) {
+		Vector3 directionToTarget = GetDirectionToTarget(this.target);
+		while (state == State.walking) {
 			this.transform.position += directionToTarget * Time.deltaTime * this.speed;
 			yield return null;
 		}
