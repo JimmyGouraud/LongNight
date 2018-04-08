@@ -4,27 +4,17 @@ using UnityEngine.UI;
 
 public class DayManager : MonoBehaviour {
 
-	public Slider DaySlider;
-
 	public delegate void ChangeDay();
 	public event ChangeDay OnChangeDay;
 
-	private float dayDuration = 10f;            // In seconds
-	private float nightDuration = 5f;           // In seconds
-	private float longestNightDuration = 25f;	// In seconds
+	public delegate void RunningDay(float progression);
+	public event RunningDay OnRunningDay;
 
-	private bool day = false;
-	public bool Day {
+	public bool Day { get; private set; }
 
-		get { return day; }
-
-		private set {
-			day = value;
-			if (OnChangeDay != null) {
-				OnChangeDay();
-			}
-		}
-	}
+	float dayDuration = 10f;            // In seconds
+	float nightDuration = 5f;           // In seconds
+	float longestNightDuration = 25f;	// In seconds
 
 	// Static singleton property
 	public static DayManager Instance { get; private set; }
@@ -56,7 +46,6 @@ public class DayManager : MonoBehaviour {
 			Day = !Day;
 		
 			if (Day) {
-				Debug.LogFormat("day duration: {0}s | night duration: {1}s", dayDuration, nightDuration);
 				duration = dayDuration / stepDuration;
 			}
 			else {
@@ -64,11 +53,15 @@ public class DayManager : MonoBehaviour {
 				nightDuration += 1; // Each night lasts 1 second longer.
 			}
 
-			DaySlider.value = 0;
-			while (DaySlider.value < 1) {
+			float daytimeProgress = 0;
+			OnRunningDay(0);
+			while (daytimeProgress < 1) {
 				yield return new WaitForSeconds(duration);
-				DaySlider.value += stepSlider;
+				daytimeProgress += stepSlider;
+				OnRunningDay(daytimeProgress);
 			}
+			OnRunningDay(1);
+			OnChangeDay();
 		}
 
 		Debug.Log("Game Over !");

@@ -50,8 +50,6 @@ public class InformationsUI : MonoBehaviour {
 		}
 		else if (go.tag == "Forestry") {
 			activedPanel = panelResources;
-
-
 			activedPanel.SetActive(true);
 		}
 		else if (go.tag == "Villager") {

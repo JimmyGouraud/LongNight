@@ -1,18 +1,17 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ResourcesUI : MonoBehaviour {
 
-	public Text WoodsText;
-	public Text StonesText;
+	public TextMeshProUGUI StonesValue;
+	public TextMeshProUGUI WoodsValue;
+	public TextMeshProUGUI GoldsValue;
 
-	void Awake() {
-		ResourcesManager.Instance.OnChangeResources += UpdateResourcesUI;
+
+	void Update() {
+        StonesValue.text = ResourcesHandler.Instance.Resources[ResourcesHandler.Resource.stone].ToString();
+		WoodsValue.text = ResourcesHandler.Instance.Resources[ResourcesHandler.Resource.wood].ToString();
+		GoldsValue.text = ResourcesHandler.Instance.Resources[ResourcesHandler.Resource.gold].ToString();
 	}
-
-	void UpdateResourcesUI() {
-		WoodsText.text = "Woods: " + ResourcesManager.Instance.Woods;
-		StonesText.text = "Stones: " + ResourcesManager.Instance.Stones;
-	}
-
 }

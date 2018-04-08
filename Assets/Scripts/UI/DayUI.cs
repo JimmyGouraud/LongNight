@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class DayUI : MonoBehaviour {
 	// TODO: Find a way to smooth the slider progression (it's currently jerky)
 
-	public Text DayText;
+	public TextMeshProUGUI DayText;
 	public Slider DayProgression;
 	public Image SlideBackground;
 	public Image SliderFillArea;
@@ -14,7 +15,13 @@ public class DayUI : MonoBehaviour {
 
 	void Awake () {
 		DayManager.Instance.OnChangeDay += UpdateText;
+		DayManager.Instance.OnRunningDay += UpdateSlider;
 		DayProgression.interactable = false;
+	}
+
+	void UpdateSlider(float dayProgression)
+	{
+		DayProgression.value += dayProgression;
 	}
 
 	void UpdateText() {
